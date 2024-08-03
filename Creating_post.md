@@ -170,3 +170,39 @@ export default async function Home() {
 ```
 
 định type cho tối ưu (code github)
+
+# lấy user để follow và lấy hashtag
+
+1. user follow => ok => đọc code github
+2. hashtag
+
+```ts
+const getTrendingTopics = unstable_cache(
+  async () => {
+    const result = await prisma.$queryRaw<{ hashtag: string; count: bigint }[]>`
+            SELECT LOWER(unnest(regexp_matches(content, '#[[:alnum:]_]+', 'g'))) AS hashtag, COUNT(*) AS count
+            FROM posts
+            GROUP BY (hashtag)
+            ORDER BY count DESC, hashtag ASC
+            LIMIT 5
+        `;
+    return result.map((row) => ({
+      hashtag: row.hashtag,
+      count: Number(row.count),
+    }));
+  },
+  ["trending_topics"],
+  {
+    revalidate: 3 * 60 * 60,
+  },
+);
+```
+
+Đây là một hàm sử dụng `unstable_cache` để tạo một hàm được cache. Điều này có nghĩa là kết quả của hàm này sẽ được lưu trữ để tái sử dụng, giúp giảm tải việc thực hiện lại cùng một truy vấn.
+
+truy vấn sql 
+- regexp_matches(content, '#[[:alnum:]_]+', 'g'): Sử dụng biểu thức chính quy để tìm tất cả các hashtag trong nội dung của bài đăng.
+- unnest: Chuyển đổi mảng kết quả từ regexp_matches thành các hàng riêng lẻ.
+- LOWER: Chuyển tất cả hashtag thành chữ thường để không phân biệt hoa thường.
+- "trending_topics": Là khóa để xác định cache. Điều này có thể được sử dụng để truy cập và quản lý cache.
+- revalidate: Đặt thời gian hết hạn cache. Trong trường hợp này, kết quả được cache sẽ được tái xác thực sau mỗi 3 giờ (3 * 60 * 60 giây).
