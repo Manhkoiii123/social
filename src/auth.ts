@@ -46,6 +46,10 @@ export const google = new Google(
   `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/google`,
 );
 //check đăng nhập chưa
+// hàm này ko chạy ở phía server thôi
+// muốn check đăng nhập chưa thì phỉa đưa về cái custom hook mà dùng cái context để truyền sang
+//dùng cái layout => bọc cái layout này trong cái context rồi truyền dữ liệu trong context là cái
+// session từ cái hàm check này ra
 export const validateRequest = cache(
   async (): Promise<
     { user: User; session: Session } | { user: null; session: null }
