@@ -14,6 +14,7 @@ export function useSubmitPostMutation() {
   const mutation = useMutation({
     mutationFn: submitPost,
     onSuccess: async (newPost) => {
+      // là cái trả về của cái submitPost (lấy ra để thêm vào mảng data cho dễ)
       // nếu mà dùng thế này thì khi dùng với loadmore ko tốt cho ux
       // do đang để infinity => call lại hết cả 3 cái cùng 1 lúc do cùng queryKey
       //   queryCleint.invalidateQueries(["post-feed", "for-you"]);
