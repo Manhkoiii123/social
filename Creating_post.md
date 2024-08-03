@@ -179,6 +179,7 @@ export default async function Home() {
 ```ts
 const getTrendingTopics = unstable_cache(
   async () => {
+    //cái này là duyệt từ cái bài post sau đó lấy từ cái content ra cái có # => đế cái đấy 
     const result = await prisma.$queryRaw<{ hashtag: string; count: bigint }[]>`
             SELECT LOWER(unnest(regexp_matches(content, '#[[:alnum:]_]+', 'g'))) AS hashtag, COUNT(*) AS count
             FROM posts
