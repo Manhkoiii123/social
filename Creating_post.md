@@ -137,3 +137,36 @@ const PostEditor = () => {
 export default PostEditor;
 
 ```
+
+# Lấy danh sách bài viết dùng trực tiếp prisma luôn
+
+```ts
+import PostEditor from "@/components/posts/editor/PostEditor";
+import prisma from "@/lib/prisma";
+
+export default async function Home() {
+  const posts = await prisma.post.findMany({
+    include: {
+      user: {
+        select: {
+          username: true,
+          displayName: true,
+          avatarUrl: true,
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  console.log(posts);
+  return (
+    <main className="h-[200vh] w-full min-w-0">
+      <div className="w-full">
+        <PostEditor />
+      </div>
+    </main>
+  );
+}
+
+```
+
+định type cho tối ưu (code github)
