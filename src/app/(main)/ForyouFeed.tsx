@@ -1,40 +1,65 @@
 "use client";
 
+import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
 import Post from "@/components/posts/Post";
-import kyIstance from "@/lib/ky";
-import { PostData } from "@/lib/types";
-import { useQuery } from "@tanstack/react-query";
+import PostsLoadingSkeleton from "@/components/posts/PostsLoaingSkeleton";
+import kyInstance from "@/lib/ky";
+import { PostsPage } from "@/lib/types";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
-const ForyouFeed = () => {
-  const query = useQuery<PostData[]>({
+export default function ForYouFeed() {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
     queryKey: ["post-feed", "for-you"],
-    queryFn: kyIstance.get("/api/posts/for-you").json<PostData[]>,
-    // queryFn: async () => {
-    //   const res = await fetch("/api/posts/for-you");
-    //   if (!res.ok) {
-    //     throw Error("Loi");
-    //   }
-    //   return res.json();
-    // },
+    queryFn: ({ pageParam }) =>
+      kyInstance
+        .get(
+          "/api/posts/for-you",
+          pageParam ? { searchParams: { cursor: pageParam } } : {},
+        )
+        .json<PostsPage>(),
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
-  if (query.status === "pending") {
-    return <Loader2 className="mx-auto animate-spin" />;
+
+  const posts = data?.pages.flatMap((page) => page.posts) || [];
+
+  if (status === "pending") {
+    return <PostsLoadingSkeleton />;
   }
-  if (query.status === "error") {
+
+  if (status === "success" && !posts.length && !hasNextPage) {
     return (
       <p className="text-center text-muted-foreground">
         No one has posted anything yet.
       </p>
     );
   }
-  return (
-    <div className="space-y-5">
-      {query.data.map((post) => {
-        return <Post key={post.id} post={post} />;
-      })}
-    </div>
-  );
-};
 
-export default ForyouFeed;
+  if (status === "error") {
+    return (
+      <p className="text-center text-destructive">
+        An error occurred while loading posts.
+      </p>
+    );
+  }
+
+  return (
+    <InfiniteScrollContainer
+      className="space-y-5"
+      onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
+    >
+      {posts.map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
+      {isFetchingNextPage && <Loader2 className="mx-auto my-3 animate-spin" />}
+    </InfiniteScrollContainer>
+  );
+}
