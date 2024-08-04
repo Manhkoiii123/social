@@ -13,7 +13,6 @@ export default function FollowerCount({
   userId,
   initialState,
 }: FollowerCountProps) {
-  console.log("chay lai");
   const { data } = useFollowerInfo(userId, initialState);
 
   return (
