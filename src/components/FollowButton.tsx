@@ -21,6 +21,7 @@ const FollowButton = ({ userId, initialState }: FollowButtonProps) => {
       data.isFollowedByUser
         ? kyInstance.delete(`/api/users/${userId}/followers`)
         : kyInstance.post(`/api/users/${userId}/followers`),
+    //custom mutate
     onMutate: async () => {
       const queryKey: QueryKey = ["follower-info", userId];
 

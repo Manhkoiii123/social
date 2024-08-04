@@ -172,6 +172,14 @@ export async function GET(
         followers: {
           where: {
             followerId: logginUser.id,
+            // nếu mà trong bảng followerId có cái loginUser đang đn ko
+            // nếu mà có thì nó trả về luôn
+            // ví dụ
+            //"followers": [
+            //   {
+            //     "followerId": 2
+            //   }
+            // ],
           },
           select: {
             followerId: true,
@@ -190,6 +198,7 @@ export async function GET(
     const data: FollowerInfo = {
       followers: user._count.followers,
       isFollowedByUser: !!user.followers.length,
+      // cái này là is để xem cái followers xem có người đang đăng nhập fl ko
     };
     return Response.json(data);
   } catch (error) {
