@@ -24,17 +24,33 @@ model User {
   avatarUrl String?
   bio String?
   sessions Session[]
-  createAt DateTime @default(now())
+  following             Follow[]       @relation("Following")
+  followers             Follow[]       @relation("Followers")
   posts Post[]
+  createAt DateTime @default(now())
+  
   @@map("users")
 }
 model Session {
  id       String   @id
  userId   String
  expiresAt DateTime 
+
  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+ 
  @@map("sessions")
 }
+
+model Follow {
+  followerId  String
+  follower    User   @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User   @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
+
 model Post {
   id                  String         @id @default(cuid())
   content             String
@@ -44,3 +60,4 @@ model Post {
 
   @@map("posts")
 }
+
