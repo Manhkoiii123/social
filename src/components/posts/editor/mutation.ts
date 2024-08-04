@@ -1,3 +1,4 @@
+import { useSession } from "@/app/(main)/SessionProvider";
 import { submitPost } from "@/components/posts/editor/actions";
 import { useToast } from "@/components/ui/use-toast";
 import { PostsPage } from "@/lib/types";
@@ -11,6 +12,7 @@ import {
 export function useSubmitPostMutation() {
   const { toast } = useToast();
   const queryCleint = useQueryClient();
+  const { user } = useSession();
   const mutation = useMutation({
     mutationFn: submitPost,
     onSuccess: async (newPost) => {
@@ -19,7 +21,16 @@ export function useSubmitPostMutation() {
       // do đang để infinity => call lại hết cả 3 cái cùng 1 lúc do cùng queryKey
       //   queryCleint.invalidateQueries(["post-feed", "for-you"]);
       // cần bên cái lúc actions tạo post trả ra guyên cái bài đó luôn
-      const queryFilter: QueryFilters = { queryKey: ["post-feed", "for-you"] };
+      const queryFilter = {
+        queryKey: ["post-feed"],
+        predicate(query) {
+          return (
+            query.queryKey.includes("for-you") ||
+            (query.queryKey.includes("user-posts") &&
+              query.queryKey.includes(user.id))
+          );
+        },
+      } satisfies QueryFilters;
       // hủy truy vấn cái có key là cái kia đi
       await queryCleint.cancelQueries(queryFilter);
       //gán lại
@@ -46,7 +57,7 @@ export function useSubmitPostMutation() {
       queryCleint.invalidateQueries({
         queryKey: queryFilter.queryKey,
         predicate(query) {
-          return !query.state.data;
+          return queryFilter.predicate(query) && !query.state.data;
         },
       });
       toast({
