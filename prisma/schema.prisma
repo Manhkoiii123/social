@@ -25,6 +25,7 @@ model User {
   bio String?
   likes                 Like[]
   sessions Session[]
+  bookmarks             Bookmark[]
   following             Follow[]       @relation("Following")
   followers             Follow[]       @relation("Followers")
   posts Post[]
@@ -59,6 +60,7 @@ model Post {
   user                User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   attachment Media[]
   likes               Like[]
+   bookmarks           Bookmark[]
   createdAt DateTime @default(now())
 
   @@map("posts")
@@ -87,4 +89,17 @@ model Like {
 
   @@unique([userId, postId])
   @@map("likes")
+}
+
+model Bookmark {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@map("bookmarks")
 }
