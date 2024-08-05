@@ -5,6 +5,7 @@ import UserPosts from "@/app/(main)/users/[username]/UserPosts";
 import { validateRequest } from "@/auth";
 import FollowButton from "@/components/FollowButton";
 import FollowerCount from "@/components/FollowerCount";
+import Linkify from "@/components/linkify";
 import TrendsSidebar from "@/components/TrendsSidebar";
 import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/UserAvatar";
@@ -114,7 +115,7 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
           <FollowButton userId={user.id} initialState={followerInfo} />
         )}
       </div>
-      {/* {user.bio && (
+      {user.bio && (
         <>
           <hr />
           <Linkify>
@@ -123,7 +124,7 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
             </div>
           </Linkify>
         </>
-      )} */}
+      )}
     </div>
   );
 }
