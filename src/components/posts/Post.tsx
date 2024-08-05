@@ -37,6 +37,7 @@ const Post = ({ post }: PostProps) => {
             <Link
               href={`/posts/${post.id}`}
               className="block text-sm text-muted-foreground hover:underline"
+              suppressHydrationWarning // enable cái waring mà server với cliennt ko giống text hay gặp
             >
               {formatRelativeDate(post.createdAt)}
             </Link>

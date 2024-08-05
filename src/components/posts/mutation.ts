@@ -17,8 +17,7 @@ export function useDeletePostMutation() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const mutation = useMutation(
-    {
+  const mutation = useMutation({
     mutationFn: deletePost,
     onSuccess: async (deletedPost) => {
       const queryFilter: QueryFilters = { queryKey: ["post-feed"] };
@@ -43,10 +42,11 @@ export function useDeletePostMutation() {
       toast({
         description: "Post deleted",
       });
-
+      // nếu xóa ở trang detail => tự đá về profile
       if (pathname === `/posts/${deletedPost.id}`) {
-        router.push(`/users/${deletedPost.user.username}`);
-      }
+        //
+        router.push(`/users/${deletedPost.user.username}`); //
+      } //
     },
     onError(error) {
       console.error(error);
