@@ -1,5 +1,5 @@
 import { useSession } from "@/app/(main)/SessionProvider";
-import Linkify from "@/components/linkify";
+import Linkify from "@/components/Linkify";
 import PostMoreButton from "@/components/posts/PostMoreButton";
 import UserAvatar from "@/components/UserAvatar";
 import UserTooltip from "@/components/UserTooltip";

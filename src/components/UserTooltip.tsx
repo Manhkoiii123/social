@@ -14,7 +14,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import UserAvatar from "./UserAvatar";
-import Linkify from "@/components/linkify";
+import Linkify from "@/components/Linkify";
 
 interface UserTooltipProps extends PropsWithChildren {
   user: UserData;
