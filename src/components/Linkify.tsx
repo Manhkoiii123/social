@@ -4,6 +4,7 @@ interface LinkifyProps {
   children: React.ReactNode;
 }
 import React from "react";
+import UserLinkWithTooltip from "@/components/UserLinkWithTooltip";
 
 const Linkify = ({ children }: LinkifyProps) => {
   return (
@@ -28,12 +29,9 @@ function LinkifyUsername({ children }: LinkifyProps) {
       regex={/(@[a-zA-Z0-9_-]+)/}
       component={(match, key) => {
         return (
-          <Link
-            href={`/users/${match.slice(1)}`}
-            className="text-primary hover:underline"
-          >
+          <UserLinkWithTooltip key={key} username={match.slice(1)}>
             {match}
-          </Link>
+          </UserLinkWithTooltip>
         );
       }}
     >
