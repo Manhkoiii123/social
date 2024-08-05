@@ -1,6 +1,7 @@
 "use client";
 import { useSession } from "@/app/(main)/SessionProvider";
 import Linkify from "@/components/Linkify";
+import BookmarkButton from "@/components/posts/BookmarkButton";
 import LikeButton from "@/components/posts/LikeButton";
 import PostMoreButton from "@/components/posts/PostMoreButton";
 import UserAvatar from "@/components/UserAvatar";
@@ -69,6 +70,14 @@ const Post = ({ post }: PostProps) => {
             }}
           />
         </div>
+        <BookmarkButton
+          postId={post.id}
+          initialState={{
+            isBookmarkedByUser: post.bookmarks.some(
+              (bookmark) => bookmark.userId === user.id,
+            ),
+          }}
+        />
       </div>
     </article>
   );
