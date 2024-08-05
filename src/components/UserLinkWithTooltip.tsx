@@ -1,4 +1,4 @@
-"use cleint";
+"use client";
 
 import UserTooltip from "@/components/UserTooltip";
 import kyInstance from "@/lib/ky";
