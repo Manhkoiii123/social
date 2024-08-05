@@ -1,3 +1,4 @@
+"use client";
 import { useSession } from "@/app/(main)/SessionProvider";
 import Linkify from "@/components/Linkify";
 import PostMoreButton from "@/components/posts/PostMoreButton";
@@ -13,7 +14,6 @@ interface PostProps {
   post: PostData;
 }
 const Post = ({ post }: PostProps) => {
-  console.log(post);
   const { user } = useSession();
   return (
     <article className="group/post space-y-3 rounded-2xl bg-card p-5 shadow-sm">
