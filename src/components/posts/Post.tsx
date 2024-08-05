@@ -1,6 +1,7 @@
 "use client";
 import { useSession } from "@/app/(main)/SessionProvider";
 import Linkify from "@/components/Linkify";
+import LikeButton from "@/components/posts/LikeButton";
 import PostMoreButton from "@/components/posts/PostMoreButton";
 import UserAvatar from "@/components/UserAvatar";
 import UserTooltip from "@/components/UserTooltip";
@@ -57,6 +58,18 @@ const Post = ({ post }: PostProps) => {
       {!!post.attachment.length && (
         <MediaPreviews attachments={post.attachment} />
       )}
+      <hr className="text-muted-foreground" />
+      <div className="flex justify-between gap-5">
+        <div className="flex items-center gap-5">
+          <LikeButton
+            postId={post.id}
+            initialState={{
+              likes: post._count.likes,
+              isLikedByUser: post.likes.some((like) => like.userId === user.id),
+            }}
+          />
+        </div>
+      </div>
     </article>
   );
 };
