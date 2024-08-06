@@ -18,7 +18,6 @@ interface PostProps {
   post: PostData;
 }
 const Post = ({ post }: PostProps) => {
-  console.log(post);
   const { user } = useSession();
   const [showComments, setShowComments] = useState(false);
   return (

@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import DeletePostDialog from "./DeletePostDialog";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PostMoreButtonProps {
   post: PostData;
@@ -42,7 +43,9 @@ export default function PostMoreButton({
       <DeletePostDialog
         post={post}
         open={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
+        onClose={() => {
+          setShowDeleteDialog(false);
+        }}
       />
     </>
   );

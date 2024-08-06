@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useSubmitCommentMutation } from "./mutations";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface CommentInputProps {
   post: PostData;
@@ -11,7 +12,7 @@ interface CommentInputProps {
 
 export default function CommentInput({ post }: CommentInputProps) {
   const [input, setInput] = useState("");
-
+  const queryClient = useQueryClient();
   const mutation = useSubmitCommentMutation(post.id);
 
   async function onSubmit(e: React.FormEvent) {
@@ -25,7 +26,10 @@ export default function CommentInput({ post }: CommentInputProps) {
         content: input,
       },
       {
-        onSuccess: () => setInput(""),
+        onSuccess: () => {
+          setInput("");
+          queryClient.invalidateQueries({ queryKey: ["post-feed"] });
+        },
       },
     );
   }

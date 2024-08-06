@@ -21,7 +21,7 @@ export async function GET(
     const comments = await prisma.comment.findMany({
       where: { postId },
       include: getCommentDataInclude(user.id),
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: "asc" },
       take: -pageSize - 1,
       cursor: cursor ? { id: cursor } : undefined,
     });

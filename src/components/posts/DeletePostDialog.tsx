@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { useDeletePostMutation } from "@/components/posts/mutation";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface DeletePostDialogProps {
   post: PostData;
@@ -23,13 +24,15 @@ export default function DeletePostDialog({
   onClose,
 }: DeletePostDialogProps) {
   const mutation = useDeletePostMutation();
-
+  const queryClient = useQueryClient();
   function handleOpenChange(open: boolean) {
     if (!open || !mutation.isPending) {
       onClose();
     }
   }
-
+  const onSuccess = () => {
+    onClose();
+  };
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
@@ -43,7 +46,7 @@ export default function DeletePostDialog({
         <DialogFooter>
           <LoadingButton
             variant="destructive"
-            onClick={() => mutation.mutate(post.id, { onSuccess: onClose })}
+            onClick={() => mutation.mutate(post.id, { onSuccess: onSuccess })}
             loading={mutation.isPending}
           >
             Delete
