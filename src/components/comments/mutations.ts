@@ -83,7 +83,7 @@ export function useDeleteCommentMutation() {
           };
         },
       );
-
+      queryClient.invalidateQueries({ queryKey: ["post-feed"] });
       toast({
         description: "Comment deleted",
       });
