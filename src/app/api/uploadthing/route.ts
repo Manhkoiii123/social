@@ -1,6 +1,8 @@
-import { fileRouter } from "@/app/api/uploadthing/core";
 import { createRouteHandler } from "uploadthing/server";
+import { fileRouter } from "@/app/api/uploadthing/core";
 
-export const { GET, POST } = createRouteHandler({
+const handler = createRouteHandler({
   router: fileRouter,
 });
+
+export const { GET, POST } = handler;
